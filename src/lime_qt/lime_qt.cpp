@@ -3,6 +3,7 @@
 // Refer to the license.txt file included.
 
 #include <clocale>
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <thread>
@@ -24,7 +25,6 @@
 #include <shlobj.h>
 #include <windows.h>
 #else
-#include <iostream>
 #include <getopt.h>
 #endif
 #ifdef __unix__
@@ -44,6 +44,7 @@
 #include "common/memory_detect.h"
 #include "common/scm_rev.h"
 #include "common/scope_exit.h"
+#include "lime/common_strings.h"
 #include "lime_qt/aboutdialog.h"
 #include "lime_qt/applets/mii_selector.h"
 #include "lime_qt/applets/swkbd.h"
@@ -70,8 +71,8 @@
 #include "lime_qt/dumping/dumping_dialog.h"
 #include "lime_qt/game_list.h"
 #include "lime_qt/hotkeys.h"
+#include "lime_qt/lime_qt.h"
 #include "lime_qt/loading_screen.h"
-#include "lime_qt/main.h"
 #include "lime_qt/movie/movie_play_dialog.h"
 #include "lime_qt/movie/movie_record_dialog.h"
 #include "lime_qt/multiplayer/state.h"
@@ -114,13 +115,6 @@
 
 #ifdef QT_STATICPLUGIN
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
-#endif
-
-#ifdef _WIN32
-extern "C" {
-// tells Nvidia drivers to use the dedicated GPU by default on laptops with switchable graphics
-__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
-}
 #endif
 
 #ifdef HAVE_SDL2
@@ -175,7 +169,7 @@ GMainWindow::GMainWindow(Core::System& system_)
 
     Debugger::ToggleConsole();
 
-    this->config = std::make_unique<Config>();
+    this->config = std::make_unique<QtConfig>();
 
     QStringList args = QApplication::arguments();
     QString game_path;
@@ -188,7 +182,7 @@ GMainWindow::GMainWindow(Core::System& system_)
         }
 
         // Dump video
-        if (args[i] == QStringLiteral("-d")) {
+        if (args[i] == QStringLiteral("--dump-video") || args[i] == QStringLiteral("-d")) {
             if (i >= args.size() - 1 || args[i + 1].startsWith(QChar::fromLatin1('-'))) {
                 continue;
             }
@@ -202,13 +196,13 @@ GMainWindow::GMainWindow(Core::System& system_)
         }
 
         // Launch game in fullscreen mode
-        if (args[i] == QStringLiteral("-f")) {
+        if (args[i] == QStringLiteral("--fullscreen") || args[i] == QStringLiteral("-f")) {
             fullscreen_override = true;
             continue;
         }
 
         // Enable GDB stub
-        if (args[i] == QStringLiteral("-g")) {
+        if (args[i] == QStringLiteral("--gdbport") || args[i] == QStringLiteral("-g")) {
             if (i >= args.size() - 1 || args[i + 1].startsWith(QChar::fromLatin1('-'))) {
                 continue;
             }
@@ -217,24 +211,12 @@ GMainWindow::GMainWindow(Core::System& system_)
             continue;
         }
 
-        if (args[i] == QStringLiteral("-h")) {
-            const std::string help_string =
-                std::string("Usage: ") + args[0].toStdString() +
-                " [options] <file path>\n"
-                "-d [path]    Dump video recording of emulator playback to the given file path\n"
-                "-g [port]    Enable gdb stub on the given port\n"
-                "-f           Start in fullscreen mode\n"
-                "-h           Display this help and exit\n"
-                "-i [path]    Install a CIA file at the given path\n"
-                "-p [path]    Play a TAS movie located at the given path\n"
-                "-r [path]    Record a TAS movie to the given file path\n"
-                "-v           Output version information and exit";
-
-            ShowCommandOutput("Help", help_string);
+        if (args[i] == QStringLiteral("--help") || args[i] == QStringLiteral("-h")) {
+            ShowCommandOutput("Help", fmt::format(Common::help_string, args[0].toStdString()));
             exit(0);
         }
 
-        if (args[i] == QStringLiteral("-i")) {
+        if (args[i] == QStringLiteral("--install") || args[i] == QStringLiteral("-i")) {
             if (i >= args.size() - 1 || args[i + 1].startsWith(QChar::fromLatin1('-'))) {
                 continue;
             }
@@ -267,7 +249,7 @@ GMainWindow::GMainWindow(Core::System& system_)
             exit(0);
         }
 
-        if (args[i] == QStringLiteral("-p")) {
+        if (args[i] == QStringLiteral("--movie-play") || args[i] == QStringLiteral("-p")) {
             if (i >= args.size() - 1 || args[i + 1].startsWith(QChar::fromLatin1('-'))) {
                 continue;
             }
@@ -276,7 +258,7 @@ GMainWindow::GMainWindow(Core::System& system_)
             continue;
         }
 
-        if (args[i] == QStringLiteral("-r")) {
+        if (args[i] == QStringLiteral("--movie-record") || args[i] == QStringLiteral("-r")) {
             if (i >= args.size() - 1 || args[i + 1].startsWith(QChar::fromLatin1('-'))) {
                 continue;
             }
@@ -285,7 +267,25 @@ GMainWindow::GMainWindow(Core::System& system_)
             continue;
         }
 
-        if (args[i] == QStringLiteral("-v")) {
+        if (args[i] == QStringLiteral("--movie-record-author") || args[i] == QStringLiteral("-a")) {
+            if (i >= args.size() - 1 || args[i + 1].startsWith(QChar::fromLatin1('-'))) {
+                continue;
+            }
+            movie_record_author = args[++i];
+            continue;
+        }
+
+        if (args[i] == QStringLiteral("--multiplayer") || args[i] == QStringLiteral("-m")) {
+            std::cout << "Warning: The --multiplayer option is not yet implemented for the Qt "
+                         "frontend; Ignoring."
+                      << std::endl;
+            if (i < args.size() - 1 && !args[i + 1].startsWith(QChar::fromLatin1('-'))) {
+                i++;
+            }
+            continue;
+        }
+
+        if (args[i] == QStringLiteral("--version") || args[i] == QStringLiteral("-v")) {
             const std::string version_string =
                 std::string("Lime3DS ") + Common::g_scm_branch + " " + Common::g_scm_desc;
             ShowCommandOutput("Version", version_string);
@@ -293,7 +293,7 @@ GMainWindow::GMainWindow(Core::System& system_)
         }
 
         // Launch game in windowed mode
-        if (args[i] == QStringLiteral("-w")) {
+        if (args[i] == QStringLiteral("--windowed") || args[i] == QStringLiteral("-w")) {
             fullscreen_override = false;
             continue;
         }
@@ -1468,7 +1468,7 @@ void GMainWindow::BootGame(const QString& filename) {
         const std::string config_file_name =
             title_id == 0 ? name : fmt::format("{:016X}", title_id);
         LOG_INFO(Frontend, "Loading per game config file for title {}", config_file_name);
-        Config per_game_config(config_file_name, Config::ConfigType::PerGameConfig);
+        QtConfig per_game_config(config_file_name, QtConfig::ConfigType::PerGameConfig);
     }
 
     // Artic Base Server cannot accept a client multiple times, so multiple loaders are not
@@ -3722,7 +3722,7 @@ static Qt::HighDpiScaleFactorRoundingPolicy GetHighDpiRoundingPolicy() {
 #endif
 }
 
-int main(int argc, char* argv[]) {
+void LaunchQtFrontend(int argc, char* argv[]) {
     Common::DetachedTasks detached_tasks;
     MicroProfileOnThreadCreate("Frontend");
     SCOPE_EXIT({ MicroProfileShutdown(); });
@@ -3747,6 +3747,19 @@ int main(int argc, char* argv[]) {
 #endif
 
     QApplication app(argc, argv);
+
+    // Required when using .qrc resources from within a static library.
+    // See https://doc.qt.io/qt-5/resources.html#using-resources-in-a-library
+    Q_INIT_RESOURCE(compatibility_list);
+    Q_INIT_RESOURCE(theme_colorful);
+    Q_INIT_RESOURCE(theme_colorful_dark);
+    Q_INIT_RESOURCE(theme_colorful_midnight_blue);
+    Q_INIT_RESOURCE(theme_default);
+    Q_INIT_RESOURCE(theme_qdarkstyle);
+    Q_INIT_RESOURCE(theme_qdarkstyle_midnight_blue);
+#ifdef ENABLE_QT_TRANSLATION
+    Q_INIT_RESOURCE(languages);
+#endif
 
     // Qt changes the locale and causes issues in float conversion using std::to_string() when
     // generating shaders
@@ -3777,5 +3790,5 @@ int main(int argc, char* argv[]) {
 
     int result = app.exec();
     detached_tasks.WaitForAllTasks();
-    return result;
+    exit(result);
 }
