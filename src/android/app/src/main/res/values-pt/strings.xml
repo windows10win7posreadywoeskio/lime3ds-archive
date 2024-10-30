@@ -209,7 +209,6 @@
     <string name="linear_filtering">Filtragem Linear</string>
     <string name="linear_filtering_description">Ativa a filtragem linear, que suaviza o visual do jogo.</string>
     <string name="texture_filter_name">Filtro de texturas</string>
-    <string name="texture_filter_description">Aprimora o visual dos jogos ao aplicar filtros às texturas. Os filtros compatíveis são: Anime4K Ultrafast, Bicúbico, ScaleForce e xBRZ Freescale.</string>
     <string name="hw_shaders">Ativar Shaders via Hardware </string>
     <string name="hw_shaders_description">Utiliza o hardware para emular os shaders do 3DS. Quando ativado, o desempenho do jogo será consideravelmente melhorado.</string>
     <string name="shaders_accurate_mul">Multiplicação precisa</string>
@@ -316,6 +315,7 @@
     <string name="preferences_debug">Depuração</string>
     <string name="preferences_theme">Tema e Cor</string>
     <string name="preferences_layout">Layout</string>
+
     <!-- ROM loading errors -->
     <string name="loader_error_encrypted">Sua ROM está Criptografada</string>
     <string name="loader_error_invalid_format">Formato inválido de ROM</string>
@@ -436,7 +436,6 @@
 
     <!-- About Game Dialog -->
     <string name="play">Jogar</string>
-
     <!-- Cheats -->
     <string name="cheats">Truques</string>
     <string name="cheats_add">Adicionar Trapaça</string>

@@ -45,7 +45,11 @@
 
     <!-- About screen strings -->
     <string name="copied_to_clipboard">Skopiowano do schowka</string>
+    <string name="lime3ds_description">Emulator 3DS na licencji open-source na bazie Citry</string>
+    <string name="contributors">Podziękowania</string>
+    <string name="contributors_description">Współtwórcy, dzięki którym Lime3DS stało się możliwe</string>
     <string name="contributors_link">https://github.com/Lime3DS/Lime3DS/graphs/contributors</string>
+    <string name="licenses_description">Projekty używane przez Lime3DS na Androida</string>
     <string name="build">Kompilacja</string>
     <string name="licenses">Licencje</string>
     <string name="support_link">https://discord.gg/4ZjMpAp3M6</string>
@@ -104,7 +108,9 @@
     <string name="controller_trigger">Spust</string>
     <string name="controller_dpad">Krzyżak</string>
     <string name="controller_dpad_axis">Krzyżak (oś)</string>
+    <string name="controller_dpad_axis_description">Niektóre kontrolery mogą nie być w stanie zmapować swojego D-pada jako osi. W takim przypadku należy użyć sekcji D-Pad (przyciski).</string>
     <string name="controller_dpad_button">Krzyżak (Przycisk)</string>
+    <string name="controller_dpad_button_description">Zmapuj D-pad na te ustawienia tylko wtedy, gdy masz problemy z mapowaniem przycisków D-Pada (Oś).</string>
     <string name="controller_axis_vertical">Oś góra/dół</string>
     <string name="controller_axis_horizontal">Oś lewa/prawa</string>
     <string name="direction_up">Góra</string>
@@ -209,7 +215,7 @@
     <string name="linear_filtering">Filtrowanie Linear</string>
     <string name="linear_filtering_description">Włącza filtrowanie liniowe, które sprawia, że grafika w grach jest płynniejsza.</string>
     <string name="texture_filter_name">Filtr tekstur</string>
-    <string name="texture_filter_description">Ulepsza oprawę wizualną gier poprzez zastosowanie filtra do tekstur. Obsługiwane filtry to Anime4K Ultrafast, Bicubic, ScaleForce i xBRZ freescale.</string>
+    <string name="texture_filter_description">Ulepsza oprawę wizualną gier poprzez zastosowanie filtrów do tekstur. Obsługiwane filtry to Anime4K Ultrafast, Bicubic, ScaleForce, xBRZ freescale i MMPX.</string>
     <string name="hw_shaders">Włącz shader sprzętu</string>
     <string name="hw_shaders_description">Używa sprzętu do emulacji shaderów 3DS. Po włączeniu, wydajność gry zostanie znacznie poprawiona.</string>
     <string name="shaders_accurate_mul">Dokładne mnożenie</string>
@@ -269,6 +275,14 @@
     <string name="audio_input_type">Urządzenie wejściowe dźwięku</string>
     <string name="sound_output_mode">Tryb wyjścia dźwięku</string>
 
+    <!-- Layout settings strings -->
+    <string name="layout_screen_orientation">Orientacja Ekranu</string>
+    <string name="layout_screen_orientation_auto_sensor">Automatycznie</string>
+    <string name="layout_screen_orientation_landscape">Widok</string>
+    <string name="layout_screen_orientation_landscape_reverse">Odwrócony widok</string>
+    <string name="layout_screen_orientation_portrait">Portret</string>
+    <string name="layout_screen_orientation_portrait_reverse">Odwrócony portret</string>
+
     <!-- Miscellaneous -->
     <string name="clear">Wyczyść</string>
     <string name="slider_default">Domyślny</string>
@@ -316,6 +330,7 @@
     <string name="preferences_debug">Debug</string>
     <string name="preferences_theme">Motyw i kolor</string>
     <string name="preferences_layout">Układ</string>
+
     <!-- ROM loading errors -->
     <string name="loader_error_encrypted">Twój ROM jest zaszyfrowany</string>
     <string name="loader_error_invalid_format">Nieprawidłowy format ROMu</string>
@@ -436,6 +451,7 @@
 
     <!-- About Game Dialog -->
     <string name="play">Odtwórz</string>
+    <string name="shortcut">Skrót</string>
 
     <!-- Cheats -->
     <string name="cheats">Cheaty</string>

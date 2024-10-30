@@ -208,7 +208,6 @@
     <string name="linear_filtering">线性过滤</string>
     <string name="linear_filtering_description">开启后，游戏视觉效果会更加平滑。</string>
     <string name="texture_filter_name">纹理滤镜</string>
-    <string name="texture_filter_description">通过对纹理使用滤镜来增强游戏的视觉效果。支持的滤镜有 Anime4K Ultrafast, Bicubic, ScaleForce 和 xBRZ freescale。</string>
     <string name="hw_shaders">启用硬件着色器</string>
     <string name="hw_shaders_description">使用硬件模拟 3DS 着色器。启用后，游戏性能将显著提高。</string>
     <string name="shaders_accurate_mul">精确乘法运算</string>
@@ -315,6 +314,7 @@
     <string name="preferences_debug">调试</string>
     <string name="preferences_theme">主题和色彩</string>
     <string name="preferences_layout">布局</string>
+
     <!-- ROM loading errors -->
     <string name="loader_error_encrypted">您的 ROM 是加密的</string>
     <string name="loader_error_invalid_format">无效的 ROM 格式</string>
@@ -438,7 +438,6 @@
 
     <!-- About Game Dialog -->
     <string name="play">开始游戏</string>
-
     <!-- Cheats -->
     <string name="cheats">金手指</string>
     <string name="cheats_add">添加金手指</string>
