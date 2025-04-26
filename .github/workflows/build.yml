@@ -248,4 +248,3 @@ jobs:
         with:
           name: ${{ env.OS }}-${{ env.TARGET }}
           path: src/android/app/artifacts/
-        run: ./.ci/ios.sh
